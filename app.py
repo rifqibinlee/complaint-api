@@ -150,6 +150,66 @@ def staff_login():
         }
     })
 
+@app.route('/api/staff/register', methods=['POST'])
+def staff_register():
+    data        = request.get_json()
+    full_name   = data.get('full_name',   '').strip()
+    email       = data.get('email',       '').strip()
+    phone       = data.get('phone',       '').strip()
+    password    = data.get('password',    '')
+    invite_code = data.get('invite_code', '').strip()
+    department_id = data.get('department_id')
+
+    # Validate invite code
+    if invite_code != Config.INVITE_CODE:
+        return jsonify({'error': 'Invalid invite code'}), 403
+
+    # Validate fields
+    if not all([full_name, email, password, department_id]):
+        return jsonify({'error': 'All fields are required'}), 400
+    if len(password) < 8:
+        return jsonify({'error': 'Password must be at least 8 characters'}), 400
+
+    # Check duplicate email
+    existing = get_staff_by_email(email)
+    if existing:
+        return jsonify({'error': 'An account with this email already exists'}), 409
+
+    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+    db = get_db()
+    try:
+        with db.cursor() as cur:
+            cur.execute(
+                '''INSERT INTO staff (department_id, full_name, email, phone, password, role)
+                   VALUES (%s, %s, %s, %s, %s, %s)
+                   RETURNING id''',
+                (department_id, full_name, email, phone or None, hashed, 'field_officer')
+            )
+            staff_id = cur.fetchone()['id']
+        db.commit()
+    finally:
+        db.close()
+
+    staff = get_staff_by_id(staff_id)
+    token = generate_token({
+        'staff_id': staff['id'],
+        'email':    staff['email'],
+        'role':     staff['role'],
+        'exp':      datetime.now(timezone.utc) + timedelta(days=7),
+    })
+
+    return jsonify({
+        'token': token,
+        'staff': {
+            'id':         staff['id'],
+            'full_name':  staff['full_name'],
+            'email':      staff['email'],
+            'role':       staff['role'],
+            'department': staff['department_name'],
+        }
+    }), 201
+
 # ── Complaints ────────────────────────────────────────────────────────
 
 @app.route('/api/complaints', methods=['GET'])
