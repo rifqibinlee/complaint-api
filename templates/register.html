@@ -277,14 +277,20 @@
 
     // Load departments
     async function loadDepts() {
-      const data = await api('/api/departments');
-      const sel  = document.getElementById('department');
-      if (!data || data.error) {
-        sel.innerHTML = '<option value="">Failed to load</option>';
-        return;
+      try {
+        const res  = await fetch('/api/departments');
+        const data = await res.json();
+        const sel  = document.getElementById('department');
+        if (!data || data.error) {
+          sel.innerHTML = '<option value="">Failed to load</option>';
+          return;
+        }
+        sel.innerHTML = '<option value="">Select your department</option>' +
+          data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+      } catch (e) {
+        console.error('Failed to load departments:', e);
+        document.getElementById('department').innerHTML = '<option value="">Failed to load</option>';
       }
-      sel.innerHTML = '<option value="">Select your department</option>' +
-        data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
     }
 
     loadDepts();
