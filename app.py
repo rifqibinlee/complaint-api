@@ -2,8 +2,8 @@ import os
 import bcrypt
 import uuid
 from datetime import datetime, timedelta, timezone
-from flask import Flask, request, jsonify, send_from_directory, render_template, redirectfrom flask_cors import CORS
-
+from flask import Flask, request, jsonify, send_from_directory, render_template, redirect
+from flask_cors import CORS
 from config import Config
 from middleware import generate_token, citizen_required, staff_required, any_auth_required
 from models import (
