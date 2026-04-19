@@ -9,3 +9,4 @@ class Config:
     UPLOAD_FOLDER    = os.path.join(os.path.dirname(__file__), 'uploads')
     MAX_IMAGE_SIZE   = 5 * 1024 * 1024  # 5MB
     ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
+    INVITE_CODE = os.environ.get('INVITE_CODE', 'PBT2026STAFF')
