@@ -8,11 +8,12 @@ from config import Config
 from middleware import generate_token, citizen_required, staff_required, any_auth_required
 from models import (
     create_user, get_user_by_ic,
-    get_staff_by_email,
+    get_staff_by_email, get_staff_by_id,
     create_complaint, get_all_complaints,
     get_complaints_by_user, get_complaint_by_id,
     update_complaint_status, get_stats,
 )
+from db import get_db
 
 app = Flask(__name__)
 CORS(app)
