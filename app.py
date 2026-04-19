@@ -260,6 +260,20 @@ def dashboard_map():
 @app.route('/')
 def root():
     return redirect('/dashboard/login')
+
+@app.route('/dashboard/register')
+def dashboard_register():
+    return render_template('register.html')
     
+# ── Departments routes ──────────────────────────────────────────────────
+@app.route('/api/departments', methods=['GET'])
+def get_departments():
+    db = get_db()
+    try:
+        with db.cursor() as cur:
+            cur.execute('SELECT id, name, category_id FROM departments ORDER BY name')
+            return jsonify([dict(r) for r in cur.fetchall()])
+    finally:
+        db.close()
 if __name__ == '__main__':
     app.run(debug=True)
