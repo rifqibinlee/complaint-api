@@ -2,8 +2,7 @@ import os
 import bcrypt
 import uuid
 from datetime import datetime, timedelta, timezone
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
+from flask import Flask, request, jsonify, send_from_directory, render_template, redirectfrom flask_cors import CORS
 
 from config import Config
 from middleware import generate_token, citizen_required, staff_required, any_auth_required
@@ -240,5 +239,27 @@ def stats():
 def serve_upload(filename):
     return send_from_directory(Config.UPLOAD_FOLDER, filename)
 
+# ── Dashboard routes ──────────────────────────────────────────────────
+
+@app.route('/dashboard/login')
+def dashboard_login():
+    return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard_index():
+    return render_template('dashboard/index.html')
+
+@app.route('/dashboard/complaints')
+def dashboard_complaints():
+    return render_template('dashboard/complaints.html')
+
+@app.route('/dashboard/map')
+def dashboard_map():
+    return render_template('dashboard/map.html')
+
+@app.route('/')
+def root():
+    return redirect('/dashboard/login')
+    
 if __name__ == '__main__':
     app.run(debug=True)
