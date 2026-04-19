@@ -2,201 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staff Login — Aduan Awam</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard — Aduan Awam</title>
   <link rel="stylesheet" href="/static/css/base.css">
   <style>
-    body {
-      background: var(--primary);
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 24px;
-    }
-
-    .login-wrap { width: 100%; max-width: 420px; }
-
-    .login-logo {
-      text-align: center; margin-bottom: 36px;
-    }
-
-    .login-logo-icon {
-      width: 64px; height: 64px;
-      background: var(--accent); border-radius: 18px;
-      display: inline-flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 24px rgba(29,111,164,0.4);
-    }
-
-    .login-logo-icon svg {
-      width: 30px; height: 30px;
-      stroke: white; fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-
-    .login-app-name {
-      font-size: 20px; font-weight: 800;
-      color: white; letter-spacing: 3px;
-      display: block;
-    }
-
-    .login-tagline {
-      font-size: 11px; color: rgba(255,255,255,0.4);
-      margin-top: 5px; letter-spacing: 0.5px;
-      display: block;
-    }
-
-    .login-card {
-      background: var(--surface);
-      border-radius: 20px; padding: 32px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
-    }
-
-    .login-title { font-size: 22px; font-weight: 700; color: var(--text1); margin-bottom: 4px; }
-    .login-sub   { font-size: 13px; color: var(--text2); margin-bottom: 28px; }
-
-    .field        { margin-bottom: 18px; }
-    .field-label  { font-size: 10px; font-weight: 700; color: var(--text2); letter-spacing: 1.2px; text-transform: uppercase; display: block; margin-bottom: 8px; }
-
-    .input-row {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: var(--radius-md); padding: 0 12px;
-      transition: border-color 0.15s;
-    }
-
-    .input-row:focus-within { border-color: var(--accent); }
-
-    .input-row svg {
-      width: 17px; height: 17px;
-      stroke: var(--text3); fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    .input-row input {
-      flex: 1; border: none; background: transparent;
-      padding: 12px 0;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px; color: var(--text1); outline: none;
-    }
-
-    .input-row input::placeholder { color: var(--text3); }
-
-    .eye-btn {
-      background: none; border: none; cursor: pointer; padding: 4px;
-      display: flex; align-items: center;
-    }
-
-    .eye-btn svg {
-      width: 16px; height: 16px;
-      stroke: var(--text3); fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-
-    .error-box {
-      background: #FEE2E2; border: 1px solid #FECACA;
-      color: #991B1B; padding: 11px 14px;
-      border-radius: var(--radius-md);
-      font-size: 13px; margin-bottom: 18px;
-      display: none;
-    }
-
-    .error-box.show { display: block; }
-
-    .submit-btn {
-      width: 100%; padding: 14px;
-      background: var(--primary); color: white;
-      border: none; border-radius: var(--radius-md);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px; font-weight: 700;
-      cursor: pointer; margin-top: 6px;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: opacity 0.15s;
-    }
-
-    .submit-btn:hover    { opacity: 0.9; }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .submit-btn svg {
-      width: 16px; height: 16px;
-      stroke: white; fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-
-    .spinner-sm {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+    .cat-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+    .cat-row:last-child{border-bottom:none}
+    .cat-name{flex:1;font-size:12px;font-weight:600;color:var(--text1)}
+    .cat-count{font-size:13px;font-weight:800;color:var(--text1);min-width:24px;text-align:right}
+    .cat-bar-bg{flex:2;background:var(--border);border-radius:3px;height:5px;overflow:hidden}
+    .cat-bar{height:100%;border-radius:3px;transition:width .8s ease}
+    .recent-item{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+    .recent-item:last-child{border-bottom:none}
+    .recent-item:hover{margin:0 -20px;padding-left:20px;padding-right:20px;background:var(--bg)}
+    .recent-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+    .recent-body{flex:1;min-width:0}
+    .recent-title{font-size:13px;font-weight:600;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .recent-meta{font-size:11px;color:var(--text3);margin-top:2px}
+    .avg-block{text-align:center;padding:24px 20px}
+    .avg-num{font-size:38px;font-weight:800;color:var(--accent)}
+    .avg-label{font-size:11px;color:var(--text3);margin-top:6px}
+    @media(max-width:900px){.two-col{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <div class="login-wrap">
-    <div class="login-logo">
-      <div class="login-logo-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      </div>
-      <span class="login-app-name">ADUAN AWAM</span>
-      <span class="login-tagline">Council Staff Portal</span>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="logo-name">ADUAN AWAM</div>
+      <div class="logo-tag">Council Staff Portal</div>
     </div>
-
-    <div class="login-card">
-      <div class="login-title">Staff Login</div>
-      <div class="login-sub">Sign in with your council credentials</div>
-
-      <div class="error-box" id="err"></div>
-
-      <div class="field">
-        <label class="field-label">Email Address</label>
-        <div class="input-row">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <input type="email" id="email" placeholder="staff@council.gov.my" autocomplete="email" />
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Main</div>
+      <a class="nav-link" data-page="dashboard" href="/dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Overview</a>
+      <a class="nav-link" data-page="complaints" href="/dashboard/complaints"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Complaints</a>
+      <a class="nav-link" data-page="map" href="/dashboard/map"><svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Map View</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="staff-card">
+        <div class="staff-av" id="staff-av">S</div>
+        <div><div class="staff-name" id="staff-name">—</div><div class="staff-role" id="staff-role">—</div></div>
+      </div>
+      <button class="logout-btn" onclick="logout()"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left"><div class="page-label">Overview</div><div class="page-title">Dashboard</div></div>
+      <div class="topbar-right">
+        <div class="live-badge"><div class="live-dot"></div><span class="live-text">LIVE</span></div>
+        <button class="btn btn-outline btn-sm" onclick="loadAll()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Refresh</button>
+      </div>
+    </div>
+    <div class="page-body">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card s-total"><div class="stat-label">Total Complaints</div><div class="stat-num" id="s-total">—</div><div class="stat-hint" id="s-today">—</div></div>
+        <div class="stat-card s-open"><div class="stat-label">Open</div><div class="stat-num" id="s-open">—</div><div class="stat-hint">Awaiting action</div></div>
+        <div class="stat-card s-progress"><div class="stat-label">In Progress</div><div class="stat-num" id="s-progress">—</div><div class="stat-hint">Being resolved</div></div>
+        <div class="stat-card s-resolved"><div class="stat-label">Resolved</div><div class="stat-num" id="s-resolved">—</div><div class="stat-hint">Successfully closed</div></div>
+      </div>
+      <!-- Two col -->
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">By Category</div><div class="card-sub">Complaint type distribution</div></div></div>
+          <div style="padding:6px 20px 16px" id="cat-list"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">Avg Resolution Time</div><div class="card-sub">Hours from submission to resolved</div></div></div>
+          <div class="avg-block"><div class="avg-num" id="avg-h">—</div><div class="avg-label">Average hours to resolution</div></div>
         </div>
       </div>
-
-      <div class="field">
-        <label class="field-label">Password</label>
-        <div class="input-row">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" />
-          <button class="eye-btn" id="eye-btn" type="button">
-            <svg viewBox="0 0 24 24" id="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
+      <!-- Recent -->
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Recent Submissions</div><div class="card-sub">Latest 10 complaints</div></div>
+          <a href="/dashboard/complaints" class="btn btn-outline btn-sm">View All</a>
         </div>
+        <div style="padding:0 20px" id="recent-list"><div class="loading"><div class="spinner"></div>Loading...</div></div>
       </div>
-
-      <button class="submit-btn" id="login-btn">
-        <span id="btn-label">Sign In</span>
-        <svg viewBox="0 0 24 24" id="btn-arrow"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
     </div>
   </div>
-
+</div>
 <script src="/static/js/app.js"></script>
 <script>
-  if (!requireAuth()) { throw new Error('redirecting'); }
+  if (!requireAuth()) { throw 0; }
   renderStaffInfo();
   setActiveNav('dashboard');
-
-  const TOKEN = getToken();
+  const TOK = getToken();
 
   async function safeFetch(path) {
     try {
-      const res = await fetch(path, {
-        headers: { Authorization: `Bearer ${TOKEN}` }
-      });
-      if (!res.ok) {
-        console.warn(path, 'returned', res.status);
-        return null;
-      }
+      const res = await fetch(path, { headers:{ Authorization:`Bearer ${TOK}` } });
+      if (!res.ok) return null;
       return await res.json();
-    } catch (e) {
-      console.error(path, e);
-      return null;
-    }
+    } catch { return null; }
   }
 
   async function loadAll() {
@@ -209,39 +111,37 @@
   }
 
   function renderStats(s) {
-    document.getElementById('stat-total').textContent    = s.total ?? 0;
-    document.getElementById('stat-open').textContent     = s.open ?? 0;
-    document.getElementById('stat-progress').textContent = s.in_progress ?? 0;
-    document.getElementById('stat-resolved').textContent = s.resolved ?? 0;
-    document.getElementById('stat-today').textContent    = `${s.today ?? 0} submitted today`;
-    document.getElementById('avg-hours').textContent     = s.avg_resolution_hours ?? '—';
-
-    const max = Math.max(...(s.by_category ?? []).map(c => c.count), 1);
-    document.getElementById('cat-list').innerHTML = (s.by_category ?? []).map(c => `
-      <div class="category-row">
-        <span class="cat-dot" style="background:${catColor(c.category_id)}"></span>
-        <span class="cat-name">${catLabel(c.category_id)}</span>
-        <div class="cat-bar-wrap">
-          <div class="cat-bar" style="width:${Math.round(c.count/max*100)}%;background:${catColor(c.category_id)}"></div>
-        </div>
-        <span class="cat-count">${c.count}</span>
-      </div>
-    `).join('') || '<div class="empty"><div class="empty-title">No data yet</div></div>';
+    document.getElementById('s-total').textContent    = s.total ?? 0;
+    document.getElementById('s-open').textContent     = s.open ?? 0;
+    document.getElementById('s-progress').textContent = s.in_progress ?? 0;
+    document.getElementById('s-resolved').textContent = s.resolved ?? 0;
+    document.getElementById('s-today').textContent    = `${s.today ?? 0} submitted today`;
+    document.getElementById('avg-h').textContent      = s.avg_resolution_hours ?? '—';
+    const cats = s.by_category ?? [];
+    const max  = Math.max(...cats.map(c=>c.count), 1);
+    document.getElementById('cat-list').innerHTML = cats.length === 0
+      ? '<div class="empty"><div class="empty-title">No data yet</div></div>'
+      : cats.map(c=>`
+        <div class="cat-row">
+          <span class="cat-dot" style="background:${catColor(c.category_id)}"></span>
+          <span class="cat-name">${catLabel(c.category_id)}</span>
+          <div class="cat-bar-bg"><div class="cat-bar" style="width:${Math.round(c.count/max*100)}%;background:${catColor(c.category_id)}"></div></div>
+          <span class="cat-count">${c.count}</span>
+        </div>`).join('');
   }
 
-  function renderRecent(complaints) {
-    document.getElementById('recent-list').innerHTML = complaints.length === 0
-      ? '<div class="empty" style="padding:30px 0"><div class="empty-title">No complaints yet</div></div>'
-      : complaints.map(c => `
-        <div class="recent-row" onclick="window.location.href='/dashboard/complaints?id=${c.id}'">
+  function renderRecent(list) {
+    document.getElementById('recent-list').innerHTML = list.length === 0
+      ? '<div class="empty" style="padding:28px 0"><div class="empty-title">No complaints yet</div></div>'
+      : list.map(c=>`
+        <div class="recent-item" onclick="location.href='/dashboard/complaints?id=${c.id}'">
           <span class="recent-dot" style="background:${catColor(c.category_id)}"></span>
           <div class="recent-body">
             <div class="recent-title">${c.title}</div>
             <div class="recent-meta">${catLabel(c.category_id)} &middot; ${fmtDate(c.submitted_at)}</div>
           </div>
           ${statusPill(c.status)}
-        </div>
-      `).join('');
+        </div>`).join('');
   }
 
   loadAll();
