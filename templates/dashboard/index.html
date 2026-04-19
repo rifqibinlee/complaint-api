@@ -175,60 +175,76 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js"></script>
-  <script>
-    // Redirect if already logged in
-    if (getToken()) window.location.href = '/dashboard';
+<script src="/static/js/app.js"></script>
+<script>
+  if (!requireAuth()) { throw new Error('redirecting'); }
+  renderStaffInfo();
+  setActiveNav('dashboard');
 
-    // Password toggle
-    const pwdInput = document.getElementById('password');
-    document.getElementById('eye-btn').addEventListener('click', () => {
-      pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
-    });
+  const TOKEN = getToken();
 
-    // Login
-    document.getElementById('login-btn').addEventListener('click', async () => {
-      const email    = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const err      = document.getElementById('err');
-      const btn      = document.getElementById('login-btn');
-      const label    = document.getElementById('btn-label');
-      const arrow    = document.getElementById('btn-arrow');
-
-      err.classList.remove('show');
-
-      if (!email || !password) {
-        err.textContent = 'Email and password are required.';
-        err.classList.add('show');
-        return;
-      }
-
-      btn.disabled = true;
-      label.textContent = 'Signing in...';
-      arrow.style.display = 'none';
-
-      const data = await api('/api/staff/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
+  async function safeFetch(path) {
+    try {
+      const res = await fetch(path, {
+        headers: { Authorization: `Bearer ${TOKEN}` }
       });
-
-      if (!data || data.error) {
-        err.textContent = data?.error ?? 'Login failed. Please try again.';
-        err.classList.add('show');
-        btn.disabled = false;
-        label.textContent = 'Sign In';
-        arrow.style.display = '';
-        return;
+      if (!res.ok) {
+        console.warn(path, 'returned', res.status);
+        return null;
       }
+      return await res.json();
+    } catch (e) {
+      console.error(path, e);
+      return null;
+    }
+  }
 
-      setAuth(data.token, data.staff);
-      window.location.href = '/dashboard';
-    });
+  async function loadAll() {
+    const [stats, complaints] = await Promise.all([
+      safeFetch('/api/stats'),
+      safeFetch('/api/complaints?limit=10'),
+    ]);
+    if (stats)      renderStats(stats);
+    if (complaints) renderRecent(complaints);
+  }
 
-    // Enter key support
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('login-btn').click();
-    });
-  </script>
+  function renderStats(s) {
+    document.getElementById('stat-total').textContent    = s.total ?? 0;
+    document.getElementById('stat-open').textContent     = s.open ?? 0;
+    document.getElementById('stat-progress').textContent = s.in_progress ?? 0;
+    document.getElementById('stat-resolved').textContent = s.resolved ?? 0;
+    document.getElementById('stat-today').textContent    = `${s.today ?? 0} submitted today`;
+    document.getElementById('avg-hours').textContent     = s.avg_resolution_hours ?? '—';
+
+    const max = Math.max(...(s.by_category ?? []).map(c => c.count), 1);
+    document.getElementById('cat-list').innerHTML = (s.by_category ?? []).map(c => `
+      <div class="category-row">
+        <span class="cat-dot" style="background:${catColor(c.category_id)}"></span>
+        <span class="cat-name">${catLabel(c.category_id)}</span>
+        <div class="cat-bar-wrap">
+          <div class="cat-bar" style="width:${Math.round(c.count/max*100)}%;background:${catColor(c.category_id)}"></div>
+        </div>
+        <span class="cat-count">${c.count}</span>
+      </div>
+    `).join('') || '<div class="empty"><div class="empty-title">No data yet</div></div>';
+  }
+
+  function renderRecent(complaints) {
+    document.getElementById('recent-list').innerHTML = complaints.length === 0
+      ? '<div class="empty" style="padding:30px 0"><div class="empty-title">No complaints yet</div></div>'
+      : complaints.map(c => `
+        <div class="recent-row" onclick="window.location.href='/dashboard/complaints?id=${c.id}'">
+          <span class="recent-dot" style="background:${catColor(c.category_id)}"></span>
+          <div class="recent-body">
+            <div class="recent-title">${c.title}</div>
+            <div class="recent-meta">${catLabel(c.category_id)} &middot; ${fmtDate(c.submitted_at)}</div>
+          </div>
+          ${statusPill(c.status)}
+        </div>
+      `).join('');
+  }
+
+  loadAll();
+</script>
 </body>
 </html>
