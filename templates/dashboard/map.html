@@ -7,29 +7,101 @@
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
-    #map{width:100%;height:calc(100vh - 62px)}
-    .map-panel{position:absolute;top:80px;right:14px;z-index:1000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
-    .map-panel>*{pointer-events:all}
-    .count-badge{background:var(--primary);color:#fff;padding:7px 13px;border-radius:var(--r-md);font-size:12px;font-weight:700;box-shadow:var(--shadow-md);text-align:center}
-    .filter-card{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);box-shadow:var(--shadow-md);padding:12px 14px;min-width:190px}
-    .filter-card-title{font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:9px}
-    .chip{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .1s;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px;user-select:none}
-    .chip:last-child{margin-bottom:0}
-    .chip:hover{background:var(--bg)}
-    .chip.on{background:var(--accent-light);color:var(--accent)}
-    .chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-    .chip-count{margin-left:auto;font-size:10px;color:var(--text3)}
-    .leaflet-popup-content-wrapper{border-radius:10px!important;border:1px solid var(--border)!important;box-shadow:0 4px 20px rgba(0,0,0,.1)!important}
-    .p-cat{font-size:10px;font-weight:700;letter-spacing:.8px;padding:2px 8px;border-radius:999px;display:inline-block;margin-bottom:5px}
-    .p-title{font-size:13px;font-weight:700;color:#0F1F3D;margin-bottom:3px;font-family:'Montserrat',sans-serif}
-    .p-desc{font-size:11px;color:#5A6A7E;line-height:1.4;font-family:'Montserrat',sans-serif}
-    .p-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-    .p-date{font-size:10px;color:#9AA5B4;font-family:'Montserrat',sans-serif}
-    .p-link{font-size:11px;font-weight:700;text-decoration:none;font-family:'Montserrat',sans-serif}
+    #map { width:100%; height:calc(100vh - 62px); }
+
+    .map-panel {
+      position:absolute; top:78px; right:14px;
+      z-index:1000; display:flex; flex-direction:column; gap:10px;
+    }
+
+    .count-badge {
+      background:var(--primary); color:#fff;
+      padding:8px 14px; border-radius:var(--radius-md);
+      font-size:12px; font-weight:700;
+      box-shadow:var(--shadow-md); text-align:center;
+    }
+
+    .map-card {
+      background:var(--surface); border-radius:var(--radius-lg);
+      border:1px solid var(--border); box-shadow:var(--shadow-md);
+      padding:12px 14px; min-width:195px;
+    }
+
+    .map-card-title {
+      font-size:9px; font-weight:700; color:var(--text3);
+      letter-spacing:1.2px; text-transform:uppercase; margin-bottom:10px;
+    }
+
+    /* Map type toggle */
+    .map-toggle {
+      display:flex; border-radius:var(--radius-md);
+      overflow:hidden; border:1px solid var(--border);
+    }
+
+    .map-toggle-btn {
+      flex:1; padding:8px 12px;
+      background:var(--surface); border:none;
+      font-family:'Montserrat',sans-serif;
+      font-size:12px; font-weight:600;
+      color:var(--text2); cursor:pointer;
+      transition:all .15s; text-align:center;
+    }
+
+    .map-toggle-btn:first-child { border-right:1px solid var(--border); }
+    .map-toggle-btn.active { background:var(--primary); color:#fff; }
+    .map-toggle-btn:hover:not(.active) { background:var(--bg); }
+
+    /* Category chips */
+    .chip {
+      display:flex; align-items:center; gap:7px;
+      padding:5px 8px; border-radius:6px;
+      cursor:pointer; transition:background .1s;
+      font-size:12px; font-weight:600; color:var(--text2);
+      margin-bottom:3px; user-select:none;
+    }
+
+    .chip:last-child { margin-bottom:0; }
+    .chip:hover { background:var(--bg); }
+    .chip.on { background:var(--accent-light); color:var(--accent); }
+    .chip-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .chip-count { margin-left:auto; font-size:10px; color:var(--text3); }
+
+    /* Popup */
+    .leaflet-popup-content-wrapper {
+      border-radius:10px !important;
+      border:1px solid var(--border) !important;
+      box-shadow:0 4px 20px rgba(0,0,0,.1) !important;
+    }
+
+    .p-cat {
+      font-size:10px; font-weight:700; letter-spacing:.8px;
+      padding:2px 8px; border-radius:999px;
+      display:inline-block; margin-bottom:5px;
+    }
+
+    .p-title {
+      font-size:13px; font-weight:700; color:#0F1F3D;
+      margin-bottom:3px; font-family:'Montserrat',sans-serif;
+    }
+
+    .p-desc {
+      font-size:11px; color:#5A6A7E;
+      line-height:1.4; font-family:'Montserrat',sans-serif;
+    }
+
+    .p-footer {
+      display:flex; justify-content:space-between;
+      align-items:center; margin-top:8px;
+    }
+
+    .p-date { font-size:10px; color:#9AA5B4; font-family:'Montserrat',sans-serif; }
+    .p-link { font-size:11px; font-weight:700; text-decoration:none; font-family:'Montserrat',sans-serif; }
   </style>
 </head>
 <body>
-<aside class="sidebar">
+<div class="layout">
+
+  <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="logo-name">ADUAN AWAM</div>
       <div class="logo-tag">Council Staff Portal</div>
@@ -51,24 +123,44 @@
       <button class="logout-btn" onclick="logout()">Sign Out</button>
     </div>
   </aside>
+
   <div class="main" style="position:relative">
     <div class="topbar">
-      <div class="topbar-left"><div class="page-label">Visualisation</div><div class="page-title">Map View</div></div>
+      <div class="topbar-left">
+        <div class="page-label">Visualisation</div>
+        <div class="page-title">Map View</div>
+      </div>
       <div class="topbar-right">
         <div class="live-badge"><div class="live-dot"></div><span class="live-text">LIVE</span></div>
-        <button class="btn btn-outline btn-sm" onclick="loadAndRender()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Refresh</button>
+        <button class="btn btn-outline btn-sm" onclick="loadAndRender()">Refresh</button>
       </div>
     </div>
+
     <div id="map"></div>
+
     <div class="map-panel">
+      <!-- Pin count -->
       <div class="count-badge" id="pin-count">Loading...</div>
-      <div class="filter-card">
-        <div class="filter-card-title">Filter by Category</div>
+
+      <!-- Map type toggle -->
+      <div class="map-card">
+        <div class="map-card-title">Map Type</div>
+        <div class="map-toggle">
+          <button class="map-toggle-btn active" id="btn-default" onclick="setMapType('default')">Default</button>
+          <button class="map-toggle-btn"         id="btn-satellite" onclick="setMapType('satellite')">Satellite</button>
+        </div>
+      </div>
+
+      <!-- Category filter -->
+      <div class="map-card">
+        <div class="map-card-title">Filter by Category</div>
         <div id="chips"></div>
       </div>
     </div>
+
   </div>
 </div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
@@ -77,79 +169,124 @@
   setActiveNav('map');
   const TOK = getToken();
 
+  // ── Map init ────────────────────────────────────────────
   const map = L.map('map').setView([3.139, 101.6869], 12);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
-    attribution:'© OpenStreetMap contributors © CARTO',subdomains:'abcd',maxZoom:19
-  }).addTo(map);
 
+  const TILES = {
+    default: L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      { attribution:'© OpenStreetMap contributors © CARTO', subdomains:'abcd', maxZoom:19 }
+    ),
+    satellite: L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      { attribution:'© Esri © OpenStreetMap contributors', maxZoom:19 }
+    ),
+  };
+
+  TILES.default.addTo(map);
+  let currentType = 'default';
+
+  function setMapType(type) {
+    if (type === currentType) return;
+    map.removeLayer(TILES[currentType]);
+    TILES[type].addTo(map);
+    currentType = type;
+    document.getElementById('btn-default').classList.toggle('active',   type === 'default');
+    document.getElementById('btn-satellite').classList.toggle('active', type === 'satellite');
+  }
+
+  // ── Data + markers ──────────────────────────────────────
   const CATS = [
-    {id:'infrastructure',label:'Infrastructure'},
-    {id:'waste',label:'Waste & Cleanliness'},
-    {id:'water',label:'Water & Flooding'},
-    {id:'construction',label:'Construction'},
-    {id:'facilities',label:'Public Facilities'},
-    {id:'nuisance',label:'Nuisance & Community'},
-    {id:'health',label:'Public Health'},
+    { id:'infrastructure', label:'Infrastructure' },
+    { id:'waste',          label:'Waste & Cleanliness' },
+    { id:'water',          label:'Water & Flooding' },
+    { id:'construction',   label:'Construction' },
+    { id:'facilities',     label:'Public Facilities' },
+    { id:'nuisance',       label:'Nuisance & Community' },
+    { id:'health',         label:'Public Health' },
   ];
 
-  let allData=[], allMarkers=[], active=new Set(CATS.map(c=>c.id));
+  let allData    = [];
+  let allMarkers = [];
+  let active     = new Set(CATS.map(c => c.id));
 
   async function loadAndRender() {
-    document.getElementById('pin-count').textContent='Loading...';
+    document.getElementById('pin-count').textContent = 'Loading...';
     try {
-      const res = await fetch('/api/complaints?limit=500',{headers:{Authorization:`Bearer ${TOK}`}});
-      allData = res.ok ? (await res.json()).filter(c=>c.lat&&c.lng) : [];
-    } catch { allData=[]; }
+      const res = await fetch('/api/complaints?limit=500', {
+        headers: { Authorization: `Bearer ${TOK}` }
+      });
+      allData = res.ok ? (await res.json()).filter(c => c.lat && c.lng) : [];
+    } catch { allData = []; }
     buildChips();
     renderMarkers();
   }
 
   function buildChips() {
-    document.getElementById('chips').innerHTML = CATS.map(cat=>{
-      const cnt = allData.filter(c=>c.category_id===cat.id).length;
-      return `<div class="chip on" data-id="${cat.id}" onclick="toggle('${cat.id}')">
-        <span class="chip-dot" style="background:${catColor(cat.id)}"></span>
-        ${cat.label}
-        <span class="chip-count">${cnt}</span>
-      </div>`;
+    document.getElementById('chips').innerHTML = CATS.map(cat => {
+      const cnt = allData.filter(c => c.category_id === cat.id).length;
+      return `
+        <div class="chip on" data-id="${cat.id}" onclick="toggleCat('${cat.id}')">
+          <span class="chip-dot" style="background:${catColor(cat.id)}"></span>
+          ${cat.label}
+          <span class="chip-count">${cnt}</span>
+        </div>`;
     }).join('');
   }
 
-  function toggle(id) {
+  function toggleCat(id) {
     active.has(id) ? active.delete(id) : active.add(id);
-    document.querySelectorAll('.chip').forEach(el=>{
+    document.querySelectorAll('.chip').forEach(el => {
       el.classList.toggle('on', active.has(el.dataset.id));
     });
     renderMarkers();
   }
 
   function renderMarkers() {
-    allMarkers.forEach(m=>map.removeLayer(m));
-    allMarkers=[];
-    const vis = allData.filter(c=>active.has(c.category_id));
-    vis.forEach(c=>{
+    allMarkers.forEach(m => map.removeLayer(m));
+    allMarkers = [];
+
+    const vis = allData.filter(c => active.has(c.category_id));
+
+    vis.forEach(c => {
       const col = catColor(c.category_id);
-      const pin = `<div style="position:relative;width:28px;height:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))">
-        <div style="width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${col};border:2px solid rgba(255,255,255,.9);position:absolute;top:0;left:0"></div>
-        <div style="width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.85);position:absolute;top:9px;left:9px"></div>
-      </div>`;
-      const mk = L.marker([parseFloat(c.lat),parseFloat(c.lng)],{
-        icon:L.divIcon({html:pin,className:'',iconSize:[28,36],iconAnchor:[14,36],popupAnchor:[0,-36]})
+
+      const pinHTML = `
+        <div style="position:relative;width:28px;height:36px;
+          filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))">
+          <div style="width:28px;height:28px;border-radius:50% 50% 50% 0;
+            transform:rotate(-45deg);background:${col};
+            border:2px solid rgba(255,255,255,.9);
+            position:absolute;top:0;left:0"></div>
+          <div style="width:9px;height:9px;border-radius:50%;
+            background:rgba(255,255,255,.85);
+            position:absolute;top:9px;left:9px"></div>
+        </div>`;
+
+      const marker = L.marker([parseFloat(c.lat), parseFloat(c.lng)], {
+        icon: L.divIcon({
+          html: pinHTML, className: '',
+          iconSize:[28,36], iconAnchor:[14,36], popupAnchor:[0,-36],
+        })
       });
-      mk.bindPopup(`
+
+      marker.bindPopup(`
         <div style="font-family:'Montserrat',sans-serif;min-width:175px;padding:3px 2px">
           <span class="p-cat" style="background:${col}18;color:${col}">${c.subcategory}</span>
           <div class="p-title">${c.title}</div>
           <div class="p-desc">${c.description}</div>
           <div class="p-footer">
             <span class="p-date">${fmtDate(c.submitted_at)}</span>
-            <a href="/dashboard/complaints?id=${c.id}" class="p-link" style="color:${col}">View →</a>
+            <a href="/dashboard/complaints?id=${c.id}" class="p-link" style="color:${col}">View &rarr;</a>
           </div>
-        </div>`,{maxWidth:240});
-      mk.addTo(map);
-      allMarkers.push(mk);
+        </div>`, { maxWidth: 240 });
+
+      marker.addTo(map);
+      allMarkers.push(marker);
     });
-    document.getElementById('pin-count').textContent=`${vis.length} pin${vis.length!==1?'s':''} on map`;
+
+    document.getElementById('pin-count').textContent =
+      `${vis.length} pin${vis.length !== 1 ? 's' : ''} on map`;
   }
 
   loadAndRender();
