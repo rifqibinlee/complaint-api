@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dashboard — Aduan Awam</title>
+  <title>Overview — Aduan Awam</title>
   <link rel="stylesheet" href="/static/css/base.css">
   <style>
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
@@ -20,15 +20,17 @@
     .recent-body{flex:1;min-width:0}
     .recent-title{font-size:13px;font-weight:600;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .recent-meta{font-size:11px;color:var(--text3);margin-top:2px}
-    .avg-block{text-align:center;padding:24px 20px}
-    .avg-num{font-size:38px;font-weight:800;color:var(--accent)}
+    .avg-block{text-align:center;padding:32px 20px}
+    .avg-num{font-size:42px;font-weight:800;color:var(--accent)}
+    .avg-unit{font-size:14px;font-weight:600;color:var(--text2);margin-top:4px}
     .avg-label{font-size:11px;color:var(--text3);margin-top:6px}
     @media(max-width:900px){.two-col{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <div class="layout">
-<aside class="sidebar">
+
+  <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="logo-name">ADUAN AWAM</div>
       <div class="logo-tag">Council Staff Portal</div>
@@ -50,44 +52,92 @@
       <button class="logout-btn" onclick="logout()">Sign Out</button>
     </div>
   </aside>
+
   <div class="main">
     <div class="topbar">
-      <div class="topbar-left"><div class="page-label">Overview</div><div class="page-title">Dashboard</div></div>
+      <div class="topbar-left">
+        <div class="page-label">Overview</div>
+        <div class="page-title">Dashboard</div>
+      </div>
       <div class="topbar-right">
         <div class="live-badge"><div class="live-dot"></div><span class="live-text">LIVE</span></div>
-        <button class="btn btn-outline btn-sm" onclick="loadAll()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Refresh</button>
+        <button class="btn btn-outline btn-sm" onclick="loadAll()">Refresh</button>
       </div>
     </div>
+
     <div class="page-body">
+
       <!-- Stats -->
       <div class="stats-grid">
-        <div class="stat-card s-total"><div class="stat-label">Total Complaints</div><div class="stat-num" id="s-total">—</div><div class="stat-hint" id="s-today">—</div></div>
-        <div class="stat-card s-open"><div class="stat-label">Open</div><div class="stat-num" id="s-open">—</div><div class="stat-hint">Awaiting action</div></div>
-        <div class="stat-card s-progress"><div class="stat-label">In Progress</div><div class="stat-num" id="s-progress">—</div><div class="stat-hint">Being resolved</div></div>
-        <div class="stat-card s-resolved"><div class="stat-label">Resolved</div><div class="stat-num" id="s-resolved">—</div><div class="stat-hint">Successfully closed</div></div>
+        <div class="stat-card s-total">
+          <div class="stat-label">Total Complaints</div>
+          <div class="stat-num" id="s-total">—</div>
+          <div class="stat-hint" id="s-today">— submitted today</div>
+        </div>
+        <div class="stat-card s-open">
+          <div class="stat-label">Open</div>
+          <div class="stat-num" id="s-open">—</div>
+          <div class="stat-hint">Awaiting action</div>
+        </div>
+        <div class="stat-card s-progress">
+          <div class="stat-label">In Progress</div>
+          <div class="stat-num" id="s-progress">—</div>
+          <div class="stat-hint">Being resolved</div>
+        </div>
+        <div class="stat-card s-resolved">
+          <div class="stat-label">Resolved</div>
+          <div class="stat-num" id="s-resolved">—</div>
+          <div class="stat-hint">Successfully closed</div>
+        </div>
       </div>
+
       <!-- Two col -->
       <div class="two-col">
         <div class="card">
-          <div class="card-header"><div><div class="card-title">By Category</div><div class="card-sub">Complaint type distribution</div></div></div>
-          <div style="padding:6px 20px 16px" id="cat-list"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+          <div class="card-header">
+            <div>
+              <div class="card-title">Complaints by Category</div>
+              <div class="card-sub">Distribution across complaint types</div>
+            </div>
+          </div>
+          <div style="padding:6px 20px 16px" id="cat-list">
+            <div class="loading"><div class="spinner"></div> Loading...</div>
+          </div>
         </div>
+
         <div class="card">
-          <div class="card-header"><div><div class="card-title">Avg Resolution Time</div><div class="card-sub">Hours from submission to resolved</div></div></div>
-          <div class="avg-block"><div class="avg-num" id="avg-h">—</div><div class="avg-label">Average hours to resolution</div></div>
+          <div class="card-header">
+            <div>
+              <div class="card-title">Average Resolution Time</div>
+              <div class="card-sub">From submission to resolved</div>
+            </div>
+          </div>
+          <div class="avg-block">
+            <div class="avg-num" id="avg-h">—</div>
+            <div class="avg-unit">hours</div>
+            <div class="avg-label">Average time to resolve a complaint</div>
+          </div>
         </div>
       </div>
-      <!-- Recent -->
+
+      <!-- Recent complaints -->
       <div class="card">
         <div class="card-header">
-          <div><div class="card-title">Recent Submissions</div><div class="card-sub">Latest 10 complaints</div></div>
+          <div>
+            <div class="card-title">Recent Submissions</div>
+            <div class="card-sub">Latest 10 complaints</div>
+          </div>
           <a href="/dashboard/complaints" class="btn btn-outline btn-sm">View All</a>
         </div>
-        <div style="padding:0 20px" id="recent-list"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        <div style="padding:0 20px" id="recent-list">
+          <div class="loading"><div class="spinner"></div> Loading...</div>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
+
 <script src="/static/js/app.js"></script>
 <script>
   if (!requireAuth()) { throw 0; }
@@ -113,21 +163,25 @@
   }
 
   function renderStats(s) {
-    document.getElementById('s-total').textContent    = s.total ?? 0;
-    document.getElementById('s-open').textContent     = s.open ?? 0;
-    document.getElementById('s-progress').textContent = s.in_progress ?? 0;
-    document.getElementById('s-resolved').textContent = s.resolved ?? 0;
+    document.getElementById('s-total').textContent    = s.total        ?? 0;
+    document.getElementById('s-open').textContent     = s.open         ?? 0;
+    document.getElementById('s-progress').textContent = s.in_progress  ?? 0;
+    document.getElementById('s-resolved').textContent = s.resolved     ?? 0;
     document.getElementById('s-today').textContent    = `${s.today ?? 0} submitted today`;
     document.getElementById('avg-h').textContent      = s.avg_resolution_hours ?? '—';
+
     const cats = s.by_category ?? [];
-    const max  = Math.max(...cats.map(c=>c.count), 1);
+    const max  = Math.max(...cats.map(c => c.count), 1);
+
     document.getElementById('cat-list').innerHTML = cats.length === 0
       ? '<div class="empty"><div class="empty-title">No data yet</div></div>'
-      : cats.map(c=>`
+      : cats.map(c => `
         <div class="cat-row">
           <span class="cat-dot" style="background:${catColor(c.category_id)}"></span>
           <span class="cat-name">${catLabel(c.category_id)}</span>
-          <div class="cat-bar-bg"><div class="cat-bar" style="width:${Math.round(c.count/max*100)}%;background:${catColor(c.category_id)}"></div></div>
+          <div class="cat-bar-bg">
+            <div class="cat-bar" style="width:${Math.round(c.count/max*100)}%;background:${catColor(c.category_id)}"></div>
+          </div>
           <span class="cat-count">${c.count}</span>
         </div>`).join('');
   }
@@ -135,7 +189,7 @@
   function renderRecent(list) {
     document.getElementById('recent-list').innerHTML = list.length === 0
       ? '<div class="empty" style="padding:28px 0"><div class="empty-title">No complaints yet</div></div>'
-      : list.map(c=>`
+      : list.map(c => `
         <div class="recent-item" onclick="location.href='/dashboard/complaints?id=${c.id}'">
           <span class="recent-dot" style="background:${catColor(c.category_id)}"></span>
           <div class="recent-body">
